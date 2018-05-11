@@ -18,6 +18,8 @@ print(record)
 
 print(type(record))
 
+#ASopotamadre
+
 
 
 
