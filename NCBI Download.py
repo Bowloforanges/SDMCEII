@@ -9,8 +9,14 @@ if int(record["Count"]) >= 4:
 else:
     print('hay menos de 4 registros')
 
+# for IdList in record
+#     print (IdList[])
 
 print (record['IdList']) # regresa la información del diccionario IdList en record
+
+print(record)
+
+print(type(record))
 
 
 
