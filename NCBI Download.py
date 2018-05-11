@@ -9,7 +9,13 @@ if int(record["Count"]) >= 4:
 else:
     print('hay menos de 4 registros')
 
+# for IdList in record
+#     print (IdList[])
 
+
+print(record)
+
+print(type(record))
 
 
 
