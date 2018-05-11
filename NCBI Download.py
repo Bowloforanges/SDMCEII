@@ -18,6 +18,18 @@ print(record)
 
 print(type(record))
 
+list1 = record['IdList'];
+list2 = [1, 2, 3, 4, 5 ];
+list3 = ["a", "b", "c", "d"]
+
+print (list1[0], list1[1])
+
+file = open('test.txt', 'w')
+for item in record['IdList']:
+    print (file, item)
+
+
+
 #ASopotamadre
 
 
