@@ -10,6 +10,7 @@ else:
     print('hay menos de 4 registros')
 
 
+print (record['IdList']) # regresa la información del diccionario IdList en record
 
 
 
