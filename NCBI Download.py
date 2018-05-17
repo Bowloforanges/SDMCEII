@@ -35,9 +35,11 @@ for item in record['IdList']:
     csv_file.write(item)
 csv_file.close()
 
+csv_f = open('test.csv','r')
+csv_f.close()
+
 raw_list = open('test.txt','r')
 raw_list.close()
-search_term = list1
 
 handle = Entrez.efetch(db="nucleotide", id=list1, rettype="fasta", retmode="text") #regresa la información de la list1 en fasta
 print(handle.read()) # no puede leer el archivo txt como referencia
@@ -60,9 +62,11 @@ with open("ALL_SEQ.fa", "w") as out_handle:
 print ("\nDownload completed")
 #ASopotamadre
 
-
-
-
+from Bio.Align.Applications import ClustalOmegaCommandline
+in_file = "ALL_SEQ.fa"
+out_file = "aligned.fa"
+clustalomega_cline = ClustalOmegaCommandline(infile=in_file, outfile=out_file, verbose=True, auto=True)
+print(clustalomega_cline)
 
 
 
