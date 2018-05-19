@@ -1,75 +1,63 @@
 from Bio import Entrez
 
-Entrez.email = "bio.eng.emmartin@outlook.com"   # required by NCBI
-handle = Entrez.esearch(db="nucleotide", retmax=10, term="opuntia[ORGN] accD", idtype="acc") # Hace una consulta, la guarda en handle
-record = Entrez.read(handle) #guarda en record los resultados de la búsqueda
-handle.close() #Cierra el handle
-if int(record["Count"]) >= 4:
-    print('hay 4 o más registros')
-else:
-    print('hay menos de 4 registros')
 
-# for IdList in record
-#     print (IdList[])
+# handle = Entrez.esearch(db="nucleotide", retmax=10, term="opuntia[ORGN] accD", idtype="acc")
+# handle = Entrez.efetch(db="nucleotide", id=IDs, rettype="fasta", retmode="text")
+# fetch_handle = Entrez.efetch(db="protein", id=IDs, rettype="fasta", retmode="text", retstart=start, retmax=batch_size)
 
-print (record['IdList']) # regresa la información del diccionario IdList en record
+def NCBIDownload():
+    db = "protein"
+    term = "fixk"
+    name = db + "_" + term + ".csv"
+    nameQuery = name.replace(" ", "")
+    nameF = db + "_" + term + ".fa"
+    nameFasta = nameF.replace(" ", "")
 
-print(record)
+    Entrez.email = "bio.eng.emmartin@outlook.com"  # required by NCBI
+    handle = Entrez.esearch(db, term, retmax=99999)
+    # Hace una consulta, la guarda en handle
+    record = Entrez.read(handle)  # guarda en record los resultados de la búsqueda
+    handle.close()  # Cierra el handle
 
-print(type(record))
+    IDCount = int(record["Count"])
+    IDs = record['IdList'];  # deposita el contenido en una lista
+    IDsString = str(IDs).replace("['", "").replace("', '", ",\n").replace("']", "")  # Parsear Ids a un String
 
-list1 = record['IdList']; #deposita el contenido en una lista
+    csv_file = open(nameQuery, 'w')  # escribir .csv con los ID's
+    csv_file.write(IDsString)
+    csv_file.close()
 
-for ID in list1:
-    print (ID)
+    print("ID Counter is : ", IDCount)
 
-file = open('test.txt', 'w') #crea un txt de la lista por linea
-for item in record['IdList']:
-    file.write("%s\n" % item)
-file.close()
+    if (IDCount >= 200):
 
-print (file)
+        batch_size = 10  # download sequences in batches so NCBI doesn't time you out
+        end = 0
 
-csv_file = open('test.csv','w')
-for item in record['IdList']:
-    csv_file.write(item)
-csv_file.close()
+        with open(nameFasta, "w") as out_handle:
+            for start in range(0, 200, batch_size):
+                end = min(IDCount, start + batch_size)
+                print("Downloading sequences %i to %i" % (start + 1, end))
+                fetch_handle = Entrez.efetch(db=db, id=IDs, rettype="fasta", retmode="text",
+                                             retstart=start, retmax=batch_size)
+                data = fetch_handle.read()
+                fetch_handle.close()
+                out_handle.write(data)
 
-csv_f = open('test.csv','r')
-csv_f.close()
+        print("\nDownload completed")
+    else:
 
-raw_list = open('test.txt','r')
-raw_list.close()
+        print("jaja al chile")
 
-handle = Entrez.efetch(db="nucleotide", id=list1, rettype="fasta", retmode="text") #regresa la información de la list1 en fasta
-print(handle.read()) # no puede leer el archivo txt como referencia
 
-count = int(record["Count"])
-
-print (count)
-
-batch_size = 5    # download sequences in batches so NCBI doesn't time you out
-
-with open("ALL_SEQ.fa", "w") as out_handle:
-     for start in range(0, count, batch_size):
-         end = min(count, start+batch_size)
-         print ("Downloading sequences %i to %i" % (start+1, end))
-         fetch_handle = Entrez.efetch(db="nucleotide", id= list1, rettype="fasta", retmode="text", retstart=start,
-                                      retmax=batch_size)
-         data = fetch_handle.read()
-         fetch_handle.close()
-         out_handle.write(data)
-print ("\nDownload completed")
-#ASopotamadre
+NCBIDownload()
 
 from Bio.Align.Applications import ClustalOmegaCommandline
+
 in_file = "ALL_SEQ.fa"
 out_file = "aligned.fa"
 clustalomega_cline = ClustalOmegaCommandline(infile=in_file, outfile=out_file, verbose=True, auto=True)
 print(clustalomega_cline)
-
-
-
 
 
 
