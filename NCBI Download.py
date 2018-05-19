@@ -1,4 +1,5 @@
-from Bio import Entrez
+from Bio import Entrez, SeqIO
+import os
 
 
 def NCBIDownload():
@@ -25,12 +26,12 @@ def NCBIDownload():
 
     print("ID Counter is : ", IDCount)
 
-    if (IDCount >= 200):
+    if (IDCount < 200):
 
         batch_size = 10  # download sequences in batches so NCBI doesn't time you out
         end = 0
 
-        with open(nameFasta, "w") as out_handle:
+        with open(nameFasta, 'w') as out_handle:
             for start in range(0, 200, batch_size):
                 end = min(IDCount, start + batch_size)
                 print("Downloading sequences %i to %i" % (start + 1, end))
@@ -41,9 +42,18 @@ def NCBIDownload():
                 out_handle.write(data)
 
         print("\nDownload completed")
-    else:
 
-        print("jaja al chile")
+    else:
+        with open(nameFasta, 'w') as w:
+                for id in IDs:
+                    fetch_handle = Entrez.efetch(db=db, id=id, rettype="fasta", retmode="text")
+                    fetch_record = SeqIO.read(fetch_handle, "fasta")
+                    fetch_handle.close()
+                    SeqIO.write(fetch_record, "current_seq.fasta", "fasta")
+                    for line in open('current_seq.fasta'):
+                        w.write(line)
+        os.remove("current_seq.fasta")
+        print("\nDownload completed")
 
 
 NCBIDownload()
