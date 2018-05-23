@@ -4,7 +4,7 @@ import os
 
 def NCBIDownload():
     db = "protein"
-    term = "fixk"
+    term = "fixk AND RefSeq[filter]"
     name = db + "_" + term + ".csv"
     nameQuery = name.replace(" ", "")
     nameF = db + "_" + term + ".fa"
@@ -34,26 +34,28 @@ def NCBIDownload():
         with open(nameFasta, 'w') as out_handle:
             for start in range(0, 200, batch_size):
                 end = min(IDCount, start + batch_size)
-                print("Downloading sequences %i to %i" % (start + 1, end))
+                print("Downloading sequences %i from %i" % (start + 1, IDCount))
                 fetch_handle = Entrez.efetch(db=db, id=IDs, rettype="fasta", retmode="text",
                                              retstart=start, retmax=batch_size)
                 data = fetch_handle.read()
                 fetch_handle.close()
                 out_handle.write(data)
 
-        print("\nDownload completed")
-
     else:
+        count = 0
         with open(nameFasta, 'w') as w:
                 for id in IDs:
+                    print("Downloading sequence %i from %i" % (count, IDCount))
                     fetch_handle = Entrez.efetch(db=db, id=id, rettype="fasta", retmode="text")
                     fetch_record = SeqIO.read(fetch_handle, "fasta")
                     fetch_handle.close()
                     SeqIO.write(fetch_record, "current_seq.fasta", "fasta")
                     for line in open('current_seq.fasta'):
                         w.write(line)
+                    count = count + 1
         os.remove("current_seq.fasta")
-        print("\nDownload completed")
+
+    print("\nDownload completed")
 
 
 NCBIDownload()
