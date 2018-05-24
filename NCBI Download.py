@@ -57,7 +57,8 @@ def NCBIDownload():
 
     print("\nDownload completed")
 
-
+c = hex(602214085774000000000000)
+print (c)
 NCBIDownload()
 
 from Bio.Align.Applications import ClustalOmegaCommandline
