@@ -4,7 +4,7 @@ import os
 
 def NCBIDownload():
     db = "protein"
-    term = "fixk AND RefSeq[filter]"
+    term = "qsec AND RefSeq[filter]"
     name = db + "_" + term + ".csv"
     nameQuery = name.replace(" ", "")
     nameF = db + "_" + term + ".fa"
@@ -17,7 +17,7 @@ def NCBIDownload():
     handle.close()  # Cierra el handle
 
     IDCount = int(record["Count"])
-    IDs = record['IdList'];  # deposita el contenido en una lista
+    IDs = record['IdList']  # deposita el contenido en una lista
     IDsString = str(IDs).replace("['", "").replace("', '", ",\n").replace("']", "")  # Parsear Ids a un String
 
     csv_file = open(nameQuery, 'w')  # escribir .csv con los ID's
