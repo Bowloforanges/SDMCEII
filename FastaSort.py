@@ -3,6 +3,7 @@
 def SortedFasta():
 
     F1string = [""]
+    FastaDataset = [""]
 
     with open("protein_qsecANDRefSeq[filter].fa", "r") as F1:
         F1string.append(F1.read().split(">"))
@@ -27,3 +28,5 @@ def SortedFasta():
 
 
 SortedFasta()
+
+# Guardar listas dentro de la lista. usar replace
