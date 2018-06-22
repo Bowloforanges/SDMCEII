@@ -1,18 +1,18 @@
 from Bio import SeqIO
+from operator import itemgetter
 
 deprecate = "MULTISPECIES"
+OrganismName = ""
 
-countantes = 0
-countdespues = 0
+comma = ", "
+
+RawList = [""]  # Lista donde se van a guardar los individuos
+Organism = [""]  # Sublista donde se van a guardar los atributos
+SortedList = [""] # Lista con los individuos ordenados, sin los Multispecies
 
 
+def DeprecateFasta():
 
-def SortedFasta():
-
-
-
-    F1string = [""] #Lista donde se van a guardar los individuos
-    Organism = [""] #Sublista donde se van a guardar los atributos
 
     for record in SeqIO.parse('protein_qsebANDRefSeq[filter].fa', 'fasta'):
         descstr = str(record.description)
@@ -24,10 +24,9 @@ def SortedFasta():
 
 
         Organism = [id, desc, name, seq]
-        F1string.append(Organism)
+        RawList.append(Organism)
 
-    F1string.pop(0)  #Borrar elemento con el que se inicializa la lista
-    # countantes = len(F1string)
+    RawList.pop(0)  #Borrar elemento con el que se inicializa la lista
 
 
     for record in SeqIO.parse('protein_qsecANDRefSeq[filter].fa', 'fasta'):
@@ -40,69 +39,67 @@ def SortedFasta():
 
 
         Organism = [id, desc, name, seq]
-        F1string.append(Organism)
-
-    # countdespues = len(F1string)
+        RawList.append(Organism)
 
     i = 0
-    F1string.pop(4905)
+    todelete = []
 
-    for org in F1string:
-        if(str(org[1]).find(deprecate) != -1):
-            print("putoelquelolea")             #
-            todelete = i                        # AQUI SE LE SIGUE: intentar borrar el elemento
-                                                # multispecies
-            F1string.pop(todelete)              #
 
-        print(i)
-        print(str(org[1]))
+
+    for org in RawList:
+        if(str(org[1]).find(deprecate) != -1):  #Guarda en una lista los el i de los elementos MULTISPECIES a borrar
+            todelete.append(i)
+
         i = i+1
 
+    i = 0
+    for elemento in todelete:
+        RawList.pop(elemento - i)  #Borra los elementos guardados en el for in anterior
+        i = i+1
+
+    # PrintRawList()
 
 
-    # print(countantes)
-    # print(countdespues)
+def PrintRawList():
+
+    i = 0
+    for org in RawList:        #imprime los organismos restantes
+        print(i)
+        print(str(org[0]))
+        i = i+1
+
+def PrintSortedList(SortedList):
+
+    i = 0
+    for org in SortedList:        #imprime los organismos restantes
+        #print(i)
+        print(str(org[0]), comma, str(org[2]), comma, str(org[1]))
+        i = i+1
+
+def SortFasta():
+
+    # OrganismName = str(RawList[0,2])
+    # print(OrganismName)
+    # sort(RawList)
+    STuple = RawList
+    SL_set=set(map(tuple, STuple))                      #Pasar la lista a tuplas para eliminar duplicados
+    FinalList = map(list,SL_set)
+    SortedList=sorted(FinalList, key = itemgetter(2, 0))#Sort de la lista por id y nombre
+    PrintSortedList(SortedList)
+
+    # for org in RawList:
+
+# SIGUE: Revisar los tamaños de los id's porque son distintos. Checar documentacion de las tuplas para saber
+#si nos borra secuencias iguales
 
 
-    # for organismo in F1string:
-    #
-    #     if(str(organismo).find(deprecate) != -1):
-    #         F1string.remove(organismo)
-    #
-    # for organismo in F1string:
-    #     countdespues+=1
-    #
-    #
-    # print(type(F1string))
-    #
-    # print("putoelquelolea")
-    #
-    # # tempfile = open("tempfile.txt", 'w')  # escribir .csv con los ID's
-    # # tempfile.write(str(F1string))
-    # # tempfile.close()
-    #
-    # # for organismo in F1string:
-    # #
-    # #     print('\n'.join(organismo))
-    # #
-    # # print(type(F1string))
-    # print(str(F1string[1]))
-    # print(countantes)
-    # print(countdespues)
-    # with open("protein_qsecANDRefSeq[filter].fa", "r") as F1:
-    #
-    #     F1string.append(F1.read().split(">"))
-    # F1.close()
-    #
-    # with open("protein_qsebANDRefSeq[filter].fa", "r") as F2:
-    #     F1string.append(F2.read().split(">"))
-    # F2.close()
-    #
-    # #countantes = len(F1string)
-    #
-    # for organismo in F1string:
-    #     countantes+=1
-    #
-SortedFasta()
 
+
+
+
+
+
+DeprecateFasta()
+SortFasta()
+#PrintRawList()
 # Guardar listas dentro de la lista. usar replace
