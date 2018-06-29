@@ -1,32 +1,105 @@
+from Bio import SeqIO
+from operator import itemgetter
+
+deprecate = "MULTISPECIES"
+OrganismName = ""
+
+comma = ", "
+
+RawList = [""]  # Lista donde se van a guardar los individuos
+Organism = [""]  # Sublista donde se van a guardar los atributos
+SortedList = [""] # Lista con los individuos ordenados, sin los Multispecies
 
 
-def SortedFasta():
-
-    F1string = [""]
-    FastaDataset = [""]
-
-    with open("protein_qsecANDRefSeq[filter].fa", "r") as F1:
-        F1string.append(F1.read().split(">"))
-    F1.close()
-
-    with open("protein_qsebANDRefSeq[filter].fa", "r") as F2:
-        F1string.append(F2.read().split(">"))
-    F2.close()
-
-    print("putoelquelolea")
-
-    # tempfile = open("tempfile.txt", 'w')  # escribir .csv con los ID's
-    # tempfile.write(str(F1string))
-    # tempfile.close()
-
-    # for organismo in F1string:
-    #
-    #     print('\n'.join(organismo))
-    #
-    # print(type(F1string))
+def DeprecateFasta():
 
 
+    for record in SeqIO.parse('protein_qsebANDRefSeq[filter].fa', 'fasta'):
+        descstr = str(record.description)
 
-SortedFasta()
+        seq= str(record.seq)
+        id = descstr[0:12]
+        desc = descstr[15:descstr.index("[")-1]
+        name = descstr[descstr.index("[")+1:descstr.index("]")]
 
+
+        Organism = [id, desc, name, seq]
+        RawList.append(Organism)
+
+    RawList.pop(0)  #Borrar elemento con el que se inicializa la lista
+
+
+    for record in SeqIO.parse('protein_qsecANDRefSeq[filter].fa', 'fasta'):
+        descstr = str(record.description)
+
+        seq= str(record.seq)
+        id = descstr[0:12]
+        desc = descstr[15:descstr.index("[")-1]
+        name = descstr[descstr.index("[")+1:descstr.index("]")]
+
+
+        Organism = [id, desc, name, seq]
+        RawList.append(Organism)
+
+    i = 0
+    todelete = []
+
+
+
+    for org in RawList:
+        if(str(org[1]).find(deprecate) != -1):  #Guarda en una lista los el i de los elementos MULTISPECIES a borrar
+            todelete.append(i)
+
+        i = i+1
+
+    i = 0
+    for elemento in todelete:
+        RawList.pop(elemento - i)  #Borra los elementos guardados en el for in anterior
+        i = i+1
+
+    # PrintRawList()
+
+
+def PrintRawList():
+
+    i = 0
+    for org in RawList:        #imprime los organismos restantes
+        print(i)
+        print(str(org[0]))
+        i = i+1
+
+def PrintSortedList(SortedList):
+
+    i = 0
+    for org in SortedList:        #imprime los organismos restantes
+        #print(i)
+        print(str(org[0]), comma, str(org[2]), comma, str(org[1]))
+        i = i+1
+
+def SortFasta():
+
+    # OrganismName = str(RawList[0,2])
+    # print(OrganismName)
+    # sort(RawList)
+    STuple = RawList
+    SL_set=set(map(tuple, STuple))                      #Pasar la lista a tuplas para eliminar duplicados
+    FinalList = map(list,SL_set)
+    SortedList=sorted(FinalList, key = itemgetter(2, 0))#Sort de la lista por id y nombre
+    PrintSortedList(SortedList)
+
+    # for org in RawList:
+
+# SIGUE: Revisar los tamaños de los id's porque son distintos. Checar documentacion de las tuplas para saber
+#si nos borra secuencias iguales
+
+
+
+
+
+
+
+
+DeprecateFasta()
+SortFasta()
+#PrintRawList()
 # Guardar listas dentro de la lista. usar replace
