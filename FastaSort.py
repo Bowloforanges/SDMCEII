@@ -1,5 +1,6 @@
 from Bio import SeqIO
 from operator import itemgetter
+import textwrap
 
 deprecate = "MULTISPECIES"
 OrganismName = ""
@@ -18,8 +19,8 @@ def DeprecateFasta():
         descstr = str(record.description)
 
         seq= str(record.seq)
-        id = descstr[0:12]
-        desc = descstr[15:descstr.index("[")-1]
+        id = descstr[0:descstr.index(".")]
+        desc = descstr[descstr.index(".")+2:descstr.index("[")-1]
         name = descstr[descstr.index("[")+1:descstr.index("]")]
 
 
@@ -33,8 +34,8 @@ def DeprecateFasta():
         descstr = str(record.description)
 
         seq= str(record.seq)
-        id = descstr[0:12]
-        desc = descstr[15:descstr.index("[")-1]
+        id = descstr[0:descstr.index(".")]
+        desc = descstr[descstr.index(".")+2:descstr.index("[")-1]
         name = descstr[descstr.index("[")+1:descstr.index("]")]
 
 
@@ -47,7 +48,7 @@ def DeprecateFasta():
 
 
     for org in RawList:
-        if(str(org[1]).find(deprecate) != -1):  #Guarda en una lista los el i de los elementos MULTISPECIES a borrar
+        if(str(org[1]).find(deprecate) != -1):  #Guarda en una lista los el id de los elementos MULTISPECIES a borrar
             todelete.append(i)
 
         i = i+1
@@ -57,7 +58,6 @@ def DeprecateFasta():
         RawList.pop(elemento - i)  #Borra los elementos guardados en el for in anterior
         i = i+1
 
-    # PrintRawList()
 
 
 def PrintRawList():
@@ -72,34 +72,49 @@ def PrintSortedList(SortedList):
 
     i = 0
     for org in SortedList:        #imprime los organismos restantes
-        #print(i)
         print(str(org[0]), comma, str(org[2]), comma, str(org[1]))
         i = i+1
 
 def SortFasta():
 
-    # OrganismName = str(RawList[0,2])
-    # print(OrganismName)
-    # sort(RawList)
     STuple = RawList
     SL_set=set(map(tuple, STuple))                      #Pasar la lista a tuplas para eliminar duplicados
     FinalList = map(list,SL_set)
     SortedList=sorted(FinalList, key = itemgetter(2, 0))#Sort de la lista por id y nombre
     PrintSortedList(SortedList)
 
-    # for org in RawList:
+    file = open("SweetFasta.fa", "w")
 
-# SIGUE: Revisar los tamaños de los id's porque son distintos. Checar documentacion de las tuplas para saber
-#si nos borra secuencias iguales
+    for organism in SortedList:
+
+        #https://docs.python.org/3/library/textwrap.html
+
+        sequencestr = str(organism[3])
+
+        sequencepar = textwrap.wrap(sequencestr, width = 60)
+
+
+        file.write(">")
+        file.write(organism[0])
+        file.write(" ")
+        file.write(organism[1])
+        file.write(" [")
+        file.write(organism[2])
+        file.write("]\n")
+        for line in sequencepar:
+            file.write(line)
+            file.write("\n")
+
+    file.close()
 
 
 
 
 
 
+
+# SIGUE:
 
 
 DeprecateFasta()
 SortFasta()
-#PrintRawList()
-# Guardar listas dentro de la lista. usar replace
