@@ -8,5 +8,10 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="R User Library" level="project" />
     <orderEntry type="library" name="R Skeletons" level="application" />
+    <orderEntry type="module" module-name="Analizador" />
+    <orderEntry type="module" module-name="Analisis-lexico-sintactico-Python" />
+    <orderEntry type="module" module-name="LEXER" />
+    <orderEntry type="module" module-name="JavaBeautifier" />
+    <orderEntry type="module" module-name="Selection" />
   </component>
 </module>

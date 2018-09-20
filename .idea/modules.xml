@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$USER_HOME$/Documents/Escuela/ICI/7mo Semestre/Autómatas II/Analisis-lexico-sintactico-Python-master/Analisis-lexico-sintactico-Python-master/.idea/Analisis-lexico-sintactico-Python.iml" filepath="$USER_HOME$/Documents/Escuela/ICI/7mo Semestre/Autómatas II/Analisis-lexico-sintactico-Python-master/Analisis-lexico-sintactico-Python-master/.idea/Analisis-lexico-sintactico-Python.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Analizador/.idea/Analizador.iml" filepath="$PROJECT_DIR$/../Analizador/.idea/Analizador.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../JavaBeautifier/.idea/JavaBeautifier.iml" filepath="$PROJECT_DIR$/../JavaBeautifier/.idea/JavaBeautifier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../LEXER/.idea/LEXER.iml" filepath="$PROJECT_DIR$/../LEXER/.idea/LEXER.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/SDMCEII.iml" filepath="$PROJECT_DIR$/.idea/SDMCEII.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Selection/.idea/Selection.iml" filepath="$PROJECT_DIR$/../Selection/.idea/Selection.iml" />
     </modules>
   </component>
 </project>
